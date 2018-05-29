@@ -9,30 +9,29 @@ pipeline {
       }
     }
 
-    def dockerImage
-    stage("compile image") {
+    stage("compile") {
       steps {
         sh "make build-linux-amd64"
-        dockerImage = docker.build('us.gcr.io/bmi-da-181915/stackdriver-prometheus', '.')
       }
     }
 
-    state("push image") {
+    stage("build & push docker image") {
       steps {
         docker.withRegistry('https://us.gcr.io/', 'gcr:bmi-da-181915') {
-            dockerImage.push 'latest'
+          docker.build('us.gcr.io/bmi-da-181915/stackdriver-prometheus', '.').push('latest')
         }
       }
     }
     stage('deploy to DA') {
       steps {
-        build job: 'GKE deployment/Non-prod environment deployment', parameters: [string(name: 'GKE_CLUSTER', value: 'da'), string(name: 'GITHUB_PROJECT', value: env.JOB_NAME)], wait: false
+        build job: 'GKE deployment/Non-prod ad-hoc pods deployment', parameters: [string(name: 'GKE_CLUSTER', value: 'da'), string(name: 'CONFIG', value: 'deployments/prometheus-service')], wait: false
       }
     }
 
-    stage('clean up') {
-      steps {
+    post {
+      always {
         cleanWs();
+      cleanWs();
       }
     }
   }
