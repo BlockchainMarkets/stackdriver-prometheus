@@ -37,7 +37,7 @@ STATICCHECK_IGNORE = \
   github.com/prometheus/prometheus/promql/engine.go:SA6002 \
   github.com/prometheus/prometheus/web/web.go:SA1019
 
-all: format staticcheck build test
+all: format build test
 
 style:
 	@echo ">> checking code style"

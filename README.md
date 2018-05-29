@@ -1,35 +1,7 @@
-# Stackdriver Prometheus server
+make
+make docker
 
-This repository contains a variant of the Prometheus server that can send
-metrics to Stackdriver. This software can support most Prometheus deployments
-with minor changes to the Prometheus server configuration.
-
-The long-term plan is to integrate with Prometheus server as a sidecar. We are
-working on [a
-design](https://docs.google.com/document/d/1TEqqE_Stq04drhjSU1I7Ctmuy0dpsvlPL1AKxqEQoSg/edit)
-with the necessary changes to the Prometheus server within the Prometheus
-community. Discussion happens in the document and in [this thread](https://groups.google.com/d/topic/prometheus-developers/BdhHaSP-qG0/discussion). Access to the design document may require membership on
-[prometheus-developers@googlegroups.com](https://groups.google.com/forum/#!forum/prometheus-developers).
-
-## Source Code Headers
-
-Every file containing source code must include copyright and license
-information. This includes any JS/CSS files that you might be serving out to
-browsers. (This is to help well-intentioned people avoid accidental copying that
-doesn't comply with the license.)
-
-Apache header:
-
-    Copyright 2018 Google Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+docker tag gcr.io/prometheus-to-sd/stackdriver-prometheus:master  us.gcr.io/bmi-da-181915/stackdriver-prometheus
+docker push us.gcr.io/bmi-da-181915/stackdriver-prometheus
+gcloud container images list-tags us.gcr.io/bmi-da-181915/stackdriver-prometheus
+prometheus --config.file=/etc/prometheus/prometheus.yml
