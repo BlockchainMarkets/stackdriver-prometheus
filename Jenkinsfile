@@ -9,16 +9,21 @@ pipeline {
       }
     }
 
-    stage("compile") {
+    stage("compile & build image") {
       steps {
         sh "make build-linux-amd64"
+        script {
+            def dockerImage = docker.build('us.gcr.io/bmi-da-181915/stackdriver-prometheus', '.')
+        }
       }
     }
 
     stage("build & push docker image") {
       steps {
-        docker.withRegistry('https://us.gcr.io/', 'gcr:bmi-da-181915') {
-          docker.build('us.gcr.io/bmi-da-181915/stackdriver-prometheus', '.').push('latest')
+        script {
+          docker.withRegistry('https://us.gcr.io/', 'gcr:bmi-da-181915') {
+            dockerImage.push('latest')
+          }
         }
       }
     }
