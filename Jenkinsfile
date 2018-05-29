@@ -1,7 +1,9 @@
 #!/usr/bin/env groovy
 
 pipeline {
+
   agent any
+
   stages {
     stage("checkout") {
       steps {
@@ -33,11 +35,12 @@ pipeline {
       }
     }
 
-    post {
-      always {
-        cleanWs();
+  }
+
+  post {
+    always {
       cleanWs();
-      }
+    cleanWs();
     }
   }
 }
